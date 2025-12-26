@@ -1,0 +1,42 @@
+<script>
+let games = JSON.parse(localStorage.getItem("games")) || [];
+
+function renderGames() {
+  const list = document.getElementById("gameList");
+  list.innerHTML = "";
+
+  games.forEach((game, index) => {
+    list.innerHTML += `
+      <div class="game-card">
+        <h3>${game.name}</h3>
+        <a href="${game.link}" target="_blank">Download</a><br><br>
+
+        <button onclick="editGame(${index})">Edit</button>
+        <button onclick="deleteGame(${index})">Delete</button>
+      </div>
+    `;
+  });
+}
+
+function deleteGame(index) {
+  if (confirm("Are you sure?")) {
+    games.splice(index, 1);
+    localStorage.setItem("games", JSON.stringify(games));
+    renderGames();
+  }
+}
+
+function editGame(index) {
+  let newName = prompt("New game name:", games[index].name);
+  let newLink = prompt("New download link:", games[index].link);
+
+  if (newName && newLink) {
+    games[index].name = newName;
+    games[index].link = newLink;
+    localStorage.setItem("games", JSON.stringify(games));
+    renderGames();
+  }
+}
+
+renderGames();
+</script>

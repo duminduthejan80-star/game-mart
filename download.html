@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Downloading...</title>
+
+<style>
+body {
+  margin:0;
+  height:100vh;
+  background:linear-gradient(135deg,#020024,#090979,#00d4ff);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial;
+  color:white;
+}
+
+.box {
+  background:rgba(0,0,0,0.6);
+  padding:35px;
+  border-radius:15px;
+  width:320px;
+  text-align:center;
+}
+
+.bar-bg {
+  width:100%;
+  height:18px;
+  background:#222;
+  border-radius:10px;
+  margin-top:20px;
+  overflow:hidden;
+}
+
+.bar {
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#00ffcc,#00bfff);
+  transition:0.3s;
+}
+
+.percent {
+  margin-top:10px;
+  font-size:18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>Downloading...</h2>
+  <p>Preparing your file</p>
+
+  <div class="bar-bg">
+    <div class="bar" id="bar"></div>
+  </div>
+
+  <div class="percent" id="percent">0%</div>
+</div>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const link = urlParams.get("link");
+
+let p = 0;
+const bar = document.getElementById("bar");
+const percent = document.getElementById("percent");
+
+const timer = setInterval(() => {
+  p += Math.floor(Math.random() * 10) + 5;
+
+  if (p >= 100) {
+    p = 100;
+    clearInterval(timer);
+
+    setTimeout(() => {
+      window.location.href = link;
+    }, 700);
+  }
+
+  bar.style.width = p + "%";
+  percent.innerText = p + "%";
+}, 350);
+</script>
+
+</body>
+</html>

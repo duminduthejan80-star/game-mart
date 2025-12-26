@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Game Details</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="gameDetails"></div>
+
+<script>
+const game = JSON.parse(localStorage.getItem("selectedGame"));
+document.getElementById("gameDetails").innerHTML = `
+  <div class="card">
+    <img src="${game.image}">
+    <h2>${game.name}</h2>
+    <p>${game.type} Game</p>
+    <p>Size: ${game.size}</p>
+    <a href="${game.link}" target="_blank">
+      <button>Download</button>
+    </a>
+  </div>
+`;
+</script>
+
+</body>
+</html>

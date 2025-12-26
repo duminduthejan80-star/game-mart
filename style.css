@@ -1,0 +1,102 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  background: black;
+}
+
+/* Animated background */
+.bg {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(270deg, #0f0c29, #302b63, #24243e);
+  background-size: 600% 600%;
+  animation: bgMove 10s ease infinite;
+}
+
+@keyframes bgMove {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+/* Login box */
+.login-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.75);
+  padding: 40px;
+  width: 320px;
+  text-align: center;
+  border-radius: 15px;
+  box-shadow: 0 0 25px #00f7ff;
+}
+
+.login-box h1 {
+  color: #00f7ff;
+  font-size: 22px;
+  text-shadow: 0 0 10px #00f7ff;
+}
+
+.subtitle {
+  color: #aaa;
+  margin-bottom: 25px;
+  letter-spacing: 2px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  background: #111;
+  color: #00f7ff;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #00f7ff;
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #00c2cc;
+  box-shadow: 0 0 15px #00f7ff;
+  transform: scale(1.05);
+}
+
+#error {
+  color: red;
+  margin-top: 15px;
+  display: none;
+}
+
+/* Shake animation */
+.shake {
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0% {transform: translate(-50%, -50%) translateX(0);}
+  25% {transform: translate(-50%, -50%) translateX(-5px);}
+  50% {transform: translate(-50%, -50%) translateX(5px);}
+  75% {transform: translate(-50%, -50%) translateX(-5px);}
+  100% {transform: translate(-50%, -50%) translateX(0);}
+}

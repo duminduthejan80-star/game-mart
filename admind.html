@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Vibe Admin</title>
+<style>
+body { font-family: Arial, sans-serif; background: linear-gradient(to right, #1e3c72, #2a5298); color: #fff; padding: 20px; }
+h1 { text-align: center; }
+#gameList .game-card { background: rgba(0,0,0,0.5); padding: 15px; margin: 10px 0; border-radius: 10px; }
+#adminPanel { margin-top: 30px; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; }
+input, button { padding: 8px; margin: 5px; border-radius: 5px; border: none; }
+button { cursor: pointer; background: #ff5722; color: #fff; }
+input.editInput { margin: 2px 0; width: 80%; }
+</style>
+</head>
+<body>
+
+<h1>Game Vibe Admin Panel</h1>
+
+<div id="gameList"></div>
+
+<div id="adminPanel">
+  <h2>Add / Upload Game (Password: 8036)</h2>
+  <input type="password" id="adminPassword" placeholder="Enter password">
+  <br>
+  <input type="text" id="gameName" placeholder="Game Name">
+  <input type="text" id="gameLink" placeholder="Game Link (or leave blank if uploading)">
+  <input type="file" id="gameFile">
+  <button onclick="addGame()">Add / Upload Game</button>
+  <button onclick="clearGames()">Clear All Games</button>
+</div>
+
+<script>
+let games = JSON.parse(localStorage.getItem("games")) || [];
+
+function renderGames() {
+  const list = document.getElementById("gameList");
+  list.innerHTML = "";
+  games.forEach((game, index) => {
+    const card = document.createElement("div");
+    card.className = "game-card";
+    card.innerHTML = `
+      <input class="editInput" id="name_${index}" value="${game.name}">
+      <input class="editInput" id="link_${index}" value="${game.link}">
+      <br>
+      <button onclick="saveGame(${index})">Save</button>
+      <button onclick="deleteGame(${index})">Delete</button>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function addGame() {
+  const password = document.getElementById("adminPassword").value;
+  if(password !== "8036") { alert("Wrong password!"); return; }
+
+  const name = document.getElementById("gameName").value.trim();
+  const linkInput = document.getElementById("gameLink").value.trim();
+  const fileInput = document.getElementById("gameFile");
+
+  if(!name) { alert("Game name is required!"); return; }
+
+  if(fileInput.files.length > 0) {
+    // Upload file and get object URL
+    const file = fileInput.files[0];
+    const url = URL.createObjectURL(file);
+    games.push({name, link: url});
+  } else if(linkInput) {
+    games.push({name, link: linkInput});
+  } else {
+    alert("Provide a link or upload a file!");
+    return;
+  }
+
+  localStorage.setItem("games", JSON.stringify(games));
+  renderGames();
+
+  document.getElementById("gameName").value = "";
+  document.getElementById("gameLink").value = "";
+  fileInput.value = "";
+}
+
+function saveGame(index) {
+  const name = document.getElementById(`name_${index}`).value.trim();
+  const link = document.getElementById(`link_${index}`).value.trim();
+  if(!name || !link) { alert("Fill both fields!"); return; }
+
+  games[index] = {name, link};
+  localStorage.setItem("games", JSON.stringify(games));
+  renderGames();
+}
+
+function deleteGame(index) {
+  if(confirm("Are you sure you want to delete this game?")) {
+    games.splice(index,1);
+    localStorage.setItem("games", JSON.stringify(games));
+    renderGames();
+  }
+}
+
+function clearGames() {
+  const password = document.getElementById("adminPassword").value;
+  if(password !== "8036") { alert("Wrong password!"); return; }
+
+  if(confirm("Are you sure you want to delete all games?")) {
+    games = [];
+    localStorage.setItem("games", JSON.stringify(games));
+    renderGames();
+  }
+}
+
+renderGames();
+</script>
+
+</body>
+</html>
