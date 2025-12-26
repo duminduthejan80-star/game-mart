@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DOUBLE79 GAME MART</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  background:#000;
+  color:#fff;
+}
+
+/* HEADER */
+header{
+  text-align:center;
+  padding:20px;
+  font-size:28px;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+
+/* BUTTON */
+button{
+  background:#0066ff;
+  color:#fff;
+  border:none;
+  padding:10px 15px;
+  border-radius:8px;
+  cursor:pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+button:active{
+  transform:scale(0.9);
+  box-shadow:0 0 10px #0066ff;
+}
+
+/* NAV */
+nav{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+/* GAME LIST */
+#games{
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
+  padding:20px;
+}
+
+.game{
+  background:#111;
+  border-radius:12px;
+  padding:15px;
+  box-shadow:0 0 15px rgba(0,102,255,0.3);
+  animation:fadeIn 0.5s ease;
+}
+
+.game h3{
+  margin-bottom:5px;
+}
+
+.tag{
+  font-size:12px;
+  color:#00aaff;
+}
+
+.game a{
+  display:inline-block;
+  margin-top:10px;
+  text-decoration:none;
+  color:#fff;
+  background:#0066ff;
+  padding:8px 12px;
+  border-radius:6px;
+}
+
+/* ADMIN PANEL */
+#adminPanel{
+  display:none;
+  padding:20px;
+  background:#111;
+  margin:20px;
+  border-radius:12px;
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:6px;
+  border:none;
+}
+
+/* ANIMATION */
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<header>DOUBLE79 GAME MART</header>
+
+<nav>
+  <button onclick="showAll()">All Games</button>
+  <button onclick="filterType('Online')">Online</button>
+  <button onclick="filterType('Offline')">Offline</button>
+  <button onclick="adminLogin()">Admin</button>
+</nav>
+
+<div id="games"></div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+  <h2>Admin Panel</h2>
+  <input type="text" id="gname" placeholder="Game Name">
+  <input type="text" id="gdesc" placeholder="Game Details">
+  <input type="text" id="glink" placeholder="MediaFire Download Link">
+  <select id="gtype">
+    <option value="Online">Online</option>
+    <option value="Offline">Offline</option>
+  </select>
+  <button onclick="addGame()">Save Game</button>
+</div>
+
+<script>
+let games = JSON.parse(localStorage.getItem("games")) || [];
+
+function render(list=games){
+  const box = document.getElementById("games");
+  box.innerHTML="";
+  list.forEach((g,i)=>{
+    box.innerHTML += `
+    <div class="game">
+      <h3>${g.name}</h3>
+      <p>${g.desc}</p>
+      <span class="tag">${g.type}</span><br>
+      <a href="${g.link}" target="_blank">Download</a><br><br>
+      ${g.admin ? `
+      <button onclick="editGame(${i})">Edit</button>
+      <button onclick="deleteGame(${i})">Delete</button>
+      ` : ``}
+    </div>
+    `;
+  });
+}
+
+function adminLogin(){
+  let pass = prompt("Enter Admin Password");
+  if(pass==="8036"){
+    document.getElementById("adminPanel").style.display="block";
+    games.forEach(g=>g.admin=true);
+    render();
+  }else{
+    alert("Wrong Password");
+  }
+}
+
+function addGame(){
+  let game={
+    name:gname.value,
+    desc:gdesc.value,
+    link:glink.value,
+    type:gtype.value,
+    admin:true
+  };
+  games.push(game);
+  save();
+  render();
+}
+
+function deleteGame(i){
+  if(confirm("Delete this game?")){
+    games.splice(i,1);
+    save();
+    render();
+  }
+}
+
+function editGame(i){
+  let g = games[i];
+  gname.value=g.name;
+  gdesc.value=g.desc;
+  glink.value=g.link;
+  gtype.value=g.type;
+  games.splice(i,1);
+}
+
+function save(){
+  localStorage.setItem("games",JSON.stringify(games));
+}
+
+function filterType(t){
+  render(games.filter(g=>g.type===t));
+}
+
+function showAll(){
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
